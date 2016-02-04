@@ -16,7 +16,7 @@ enabling easy styling, it only has two parameters:
 
 EXAMPLE:
 
-$("body").myAlert(tableNames, true);
+$("body").responsiveTable(tableNames, true);
 
 The selector at the beginning doasn't matter, as the tables will 
 replace the position of the html tables.
