@@ -1,0 +1,67 @@
+(function($) {
+	$.fn.responsiveTable = function(tableNames, customMedia) {
+		$("table").hide();
+		var countM = 0;
+		var tableCount = $("table").length;
+		if(tableCount > 0) {
+			for(var i = 1; i <= tableCount; i++) {
+				countM++;
+				$("<div class='container tableD' id=tableD"+i+"></div>").insertBefore("table:nth-of-type(1)");
+				$("<div class='container-full tableContainer' id=container"+countM+"></div>").insertBefore("table:nth-of-type(1)");
+				for(var t = 1; t <= $("table:nth-of-type("+i+") tr").length; t++) {
+					$("#container"+countM).append("<div class='container-full tableM' id=tableM"+t+"></div>");
+					$("#tableD"+i).append("<div class='row'></div>");
+					for(var l = 1; l <= $("table:nth-of-type("+i+") tr:nth-of-type("+t+") td").length; l++) {
+						var currentElement = $("#tableD"+i+" .row:nth-of-type("+t+")");
+						var currentData = $("table:nth-of-type("+i+") tr:nth-of-type("+t+") td:nth-of-type("+l+")").html();
+						currentElement.append("<div class=cell>"+currentData+"</div>");
+						var childrenLength = currentElement.children().length;
+						currentElement.children().css({width: 100 / childrenLength + "%", float: "left"});
+						$("#container"+countM+" #tableM"+t).append("<div class=row></div>");
+						var currentLeft = $("table:nth-of-type("+i+") tr:nth-of-type(1) td:nth-of-type("+l+")").html()
+						var currentRight = $("table:nth-of-type("+i+") tr:nth-of-type("+t+") td:nth-of-type("+l+")").html();
+						$("#container"+countM+" #tableM"+t+" .row:nth-of-type("+l+")").css({marginLeft: "0px", marginRight: "0px"});
+						$("#container"+countM+" #tableM"+t+" .row:nth-of-type("+l+")").append("<div class=left></div><div class=right></div>");
+						$("#container"+countM+" #tableM"+t+" .row:nth-of-type("+l+") .left").append(currentLeft);
+						$("#container"+countM+" #tableM"+t+" .row:nth-of-type("+l+") .right").append(currentRight);
+						$("#container"+countM+" #tableM"+t+" .row:nth-of-type("+l+")").children().css({width: 100 / 2 + "%", float: "left"});
+					}
+				}
+			}
+			if(customMedia != true || customMedia != "true") {
+				$("body").append("<style>.tableM, .tableContainerHead{display:none;}@media(max-width:750px){.tableD{display:none;}.tableM,.tableContainerHead{display:block!important;width:75%;margin:0 auto;margin-top:2.5%;}}@media(max-width:600px){.tableM,.tableContainerHead{width:100%}}</style>");
+			} else if(customMedia != "false" || customMedia != false && customMedia != true || customMedia != "true") {
+				console.error("Please provide either 'true' or 'false' to weather you would like custom media queries or not.");
+			}
+			if(tableNames != undefined && tableNames.length > 0 && tableNames instanceof Array) {
+				for(var i = 0; i <= $(".tableContainer").length; i++) {
+					if(tableNames[i-1] != undefined) {
+						$("<h2 class=table"+i+">"+tableNames[i-1]+"</h2>").css({textAlign: "center"}).addClass("tableContainerHead").insertBefore("#container"+i);
+					} else {
+						$("<h2 class=table"+i+">Table "+i+"</h2>").css({textAlign: "center"}).addClass("tableContainerHead").insertBefore("#container"+i);
+					}
+					$("#container"+i).css({display: "none"});
+				}
+			} else {
+				for(var i = 0; i <= $(".tableContainer").length; i++) {
+					$("<h2 class=table"+i+">Table "+i+"</h2>").css({textAlign: "center"}).addClass("tableContainerHead").insertBefore("#container"+i);
+					$("#container"+i).css({display: "none"});
+				}
+			}
+			$(".tableD .container, .tableM .container").css({marginTop: "5%"})
+			$(".container .row:first-child").addClass("tableHead");
+			$(".container .row p:first-child").addClass("leftColumn");
+			$(".container .row:first-child p:first-child").removeClass("leftColumn");
+			$(".tableContainerHead, tableM").css({display: "none"})
+			$(".tableContainer .tableM .row p").css({width: "48%", float: "left"});
+			$(".tableContainer .tableM .row:first-child").addClass("tableHead");
+			$(".tableContainer .tableM .row p:first-child").addClass("leftColumn");
+			$(".tableContainer .tableM .row:first-child p:first-child").removeClass("leftColumn");
+			$(".tableContainerHead").on("click",function() {
+				$(this).next().slideToggle("slow");
+			});
+		} else {
+			console.error("Please make sure there is a table in the HTML.");
+		}
+	}
+}(jQuery));
